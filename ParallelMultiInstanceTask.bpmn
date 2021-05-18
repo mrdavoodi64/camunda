@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0vft7s0" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.14.0">
+  <bpmn:process id="parallelTask" name="parallelTask" isExecutable="true">
+    <bpmn:documentation>In this simple model, two sample users should response to this task in parallel and when the task completed, we count the number of anwers which are equal to "yes" via task listener.</bpmn:documentation>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1wwesgw</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1wwesgw" sourceRef="StartEvent_1" targetRef="Activity_11vxy2b" />
+    <bpmn:sequenceFlow id="Flow_13hw32c" sourceRef="Activity_11vxy2b" targetRef="Activity_0oil5gi" />
+    <bpmn:scriptTask id="Activity_11vxy2b" name="set users" scriptFormat="groovy" camunda:resultVariable="users">
+      <bpmn:incoming>Flow_1wwesgw</bpmn:incoming>
+      <bpmn:outgoing>Flow_13hw32c</bpmn:outgoing>
+      <bpmn:script>def list1=['mrd','demo']
+
+def users= new ArrayList&lt;String&gt;(list1)
+
+
+execution.setVariable("count",0)
+
+execution.setVariable("users",users)</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:userTask id="Activity_0oil5gi" name="parallel response" camunda:assignee="${uAssignee}">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="answer" label="answer" type="enum">
+            <camunda:value id="y" name="yes" />
+            <camunda:value id="n" name="no" />
+          </camunda:formField>
+        </camunda:formData>
+        <camunda:taskListener event="complete">
+          <camunda:script scriptFormat="groovy">if(answer=="y")
+count=count+1
+
+task.execution.setVariable("count",count)</camunda:script>
+        </camunda:taskListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_13hw32c</bpmn:incoming>
+      <bpmn:outgoing>Flow_0u9o8qv</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="${users}" camunda:elementVariable="uAssignee" />
+    </bpmn:userTask>
+    <bpmn:endEvent id="Event_1rw5gi3">
+      <bpmn:incoming>Flow_04ts0h1</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0u9o8qv" sourceRef="Activity_0oil5gi" targetRef="Activity_1ofer4d" />
+    <bpmn:userTask id="Activity_1ofer4d" name="show result" camunda:assignee="demo">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="count" label="count of yes" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0u9o8qv</bpmn:incoming>
+      <bpmn:outgoing>Flow_04ts0h1</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_04ts0h1" sourceRef="Activity_1ofer4d" targetRef="Event_1rw5gi3" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="parallelTask">
+      <bpmndi:BPMNEdge id="Flow_04ts0h1_di" bpmnElement="Flow_04ts0h1">
+        <di:waypoint x="860" y="120" />
+        <di:waypoint x="1032" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0u9o8qv_di" bpmnElement="Flow_0u9o8qv">
+        <di:waypoint x="620" y="120" />
+        <di:waypoint x="760" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_13hw32c_di" bpmnElement="Flow_13hw32c">
+        <di:waypoint x="380" y="120" />
+        <di:waypoint x="520" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1wwesgw_di" bpmnElement="Flow_1wwesgw">
+        <di:waypoint x="215" y="120" />
+        <di:waypoint x="280" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="179" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1mo36fr_di" bpmnElement="Activity_11vxy2b">
+        <dc:Bounds x="280" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1rw5gi3_di" bpmnElement="Event_1rw5gi3">
+        <dc:Bounds x="1032" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0oil5gi_di" bpmnElement="Activity_0oil5gi">
+        <dc:Bounds x="520" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1ofer4d_di" bpmnElement="Activity_1ofer4d">
+        <dc:Bounds x="760" y="80" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
