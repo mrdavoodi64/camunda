@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1nx9wmq" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="4.7.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.14.0">
+  <bpmn:process id="signal_catch" name="Signal Catch" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1e59iy2</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1e59iy2" sourceRef="StartEvent_1" targetRef="Gateway_1pu6ko4" />
+    <bpmn:exclusiveGateway id="Gateway_1pu6ko4">
+      <bpmn:incoming>Flow_1e59iy2</bpmn:incoming>
+      <bpmn:incoming>Flow_08cl85x</bpmn:incoming>
+      <bpmn:outgoing>Flow_07k4tgc</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_07k4tgc" sourceRef="Gateway_1pu6ko4" targetRef="Activity_1p1638j" />
+    <bpmn:sequenceFlow id="Flow_167kao6" sourceRef="Activity_1p1638j" targetRef="Activity_1kh351y" />
+    <bpmn:sequenceFlow id="Flow_00oem6z" sourceRef="Activity_1kh351y" targetRef="Activity_1oic8zq" />
+    <bpmn:endEvent id="Event_0i6tffu">
+      <bpmn:incoming>Flow_0he5gti</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0he5gti" sourceRef="Activity_1oic8zq" targetRef="Event_0i6tffu" />
+    <bpmn:userTask id="Activity_1p1638j" name="Register Contract" camunda:assignee="demo">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="contract_value" label="contract value" type="string" />
+        </camunda:formData>
+        <camunda:taskListener event="update">
+          <camunda:script scriptFormat="groovy">execution.setVariable("contractvalue",contract_value)</camunda:script>
+        </camunda:taskListener>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_07k4tgc</bpmn:incoming>
+      <bpmn:outgoing>Flow_167kao6</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_1kh351y" name="Check Contract" camunda:assignee="demo">
+      <bpmn:extensionElements>
+        <camunda:formData>
+          <camunda:formField id="contract_value" label="contract value" type="string" />
+        </camunda:formData>
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_167kao6</bpmn:incoming>
+      <bpmn:outgoing>Flow_00oem6z</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="Activity_1oic8zq" name="Final Step" camunda:assignee="demo">
+      <bpmn:incoming>Flow_00oem6z</bpmn:incoming>
+      <bpmn:outgoing>Flow_0he5gti</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:boundaryEvent id="Event_0lo21mj" attachedToRef="Activity_1kh351y">
+      <bpmn:outgoing>Flow_08cl85x</bpmn:outgoing>
+      <bpmn:signalEventDefinition id="SignalEventDefinition_0mjmmqg" signalRef="Signal_16fdoyy" />
+    </bpmn:boundaryEvent>
+    <bpmn:sequenceFlow id="Flow_08cl85x" sourceRef="Event_0lo21mj" targetRef="Gateway_1pu6ko4" />
+  </bpmn:process>
+  <bpmn:signal id="Signal_16fdoyy" name="Signal_Contract" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="signal_catch">
+      <bpmndi:BPMNEdge id="Flow_08cl85x_di" bpmnElement="Flow_08cl85x">
+        <di:waypoint x="640" y="208" />
+        <di:waypoint x="640" y="250" />
+        <di:waypoint x="270" y="250" />
+        <di:waypoint x="270" y="175" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0he5gti_di" bpmnElement="Flow_0he5gti">
+        <di:waypoint x="890" y="150" />
+        <di:waypoint x="992" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00oem6z_di" bpmnElement="Flow_00oem6z">
+        <di:waypoint x="690" y="150" />
+        <di:waypoint x="790" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_167kao6_di" bpmnElement="Flow_167kao6">
+        <di:waypoint x="480" y="150" />
+        <di:waypoint x="590" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_07k4tgc_di" bpmnElement="Flow_07k4tgc">
+        <di:waypoint x="295" y="150" />
+        <di:waypoint x="380" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1e59iy2_di" bpmnElement="Flow_1e59iy2">
+        <di:waypoint x="188" y="150" />
+        <di:waypoint x="245" y="150" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="132" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1pu6ko4_di" bpmnElement="Gateway_1pu6ko4" isMarkerVisible="true">
+        <dc:Bounds x="245" y="125" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0i6tffu_di" bpmnElement="Event_0i6tffu">
+        <dc:Bounds x="992" y="132" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1pdxikv_di" bpmnElement="Activity_1p1638j">
+        <dc:Bounds x="380" y="110" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0u64kdw_di" bpmnElement="Activity_1kh351y">
+        <dc:Bounds x="590" y="110" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_07epqvs_di" bpmnElement="Activity_1oic8zq">
+        <dc:Bounds x="790" y="110" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0j49sci_di" bpmnElement="Event_0lo21mj">
+        <dc:Bounds x="622" y="172" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
